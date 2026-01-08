@@ -15,6 +15,9 @@ import { perfNow } from 'src/app/util/util';
 import { SettingsService } from 'src/app/service/settings/settings.service';
 
 const SEPARATOR = '\x1F'; // ASCII Unit Separator
+const DEFAULT_COLUMN_WIDTH = 10;
+const COLUMN_PADDING = 2;
+const MAX_COLUMN_WIDTH = 50;
 
 export interface MappingRow {
   uuid: Uuid;
@@ -180,13 +183,13 @@ export class MappingComponent implements OnInit, AfterViewInit {
     // Auto-fit columns (optional, improves readability)
     worksheet.columns.forEach(column => {
       let maxLength = 0;
-      column.eachCell?.({ includeEmpty: true }, cell => {
-        const cellLength = cell.value ? cell.value.toString().length : 10;
+      column.eachCell({ includeEmpty: true }, cell => {
+        const cellLength = cell.value ? cell.value.toString().length : DEFAULT_COLUMN_WIDTH;
         if (cellLength > maxLength) {
           maxLength = cellLength;
         }
       });
-      column.width = Math.min(maxLength + 2, 50); // Max width of 50
+      column.width = Math.min(maxLength + COLUMN_PADDING, MAX_COLUMN_WIDTH);
     });
 
     // Write file
