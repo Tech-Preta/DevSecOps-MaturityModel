@@ -15,6 +15,9 @@ import { perfNow } from 'src/app/util/util';
 import { SettingsService } from 'src/app/service/settings/settings.service';
 
 const SEPARATOR = '\x1F'; // ASCII Unit Separator
+const DEFAULT_COLUMN_WIDTH = 10;
+const COLUMN_PADDING = 2;
+const MAX_COLUMN_WIDTH = 50;
 
 export interface MappingRow {
   uuid: Uuid;
@@ -167,7 +170,7 @@ export class MappingComponent implements OnInit, AfterViewInit {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Sheet1');
 
-    // Extract table data from HTML table
+    // Extract table data
     const table = element as HTMLTableElement;
     const rows = Array.from(table.querySelectorAll('tr'));
 
@@ -177,19 +180,19 @@ export class MappingComponent implements OnInit, AfterViewInit {
       worksheet.addRow(rowData);
     });
 
-    // Auto-fit columns for better readability
+    // Auto-fit columns (optional, improves readability)
     worksheet.columns.forEach(column => {
       let maxLength = 0;
       column.eachCell({ includeEmpty: true }, cell => {
-        const cellLength = cell.value ? cell.value.toString().length : 10;
+        const cellLength = cell.value ? cell.value.toString().length : DEFAULT_COLUMN_WIDTH;
         if (cellLength > maxLength) {
           maxLength = cellLength;
         }
       });
-      column.width = Math.min(maxLength + 2, 50);
+      column.width = Math.min(maxLength + COLUMN_PADDING, MAX_COLUMN_WIDTH);
     });
 
-    // Generate and download the Excel file
+    // Write file
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
