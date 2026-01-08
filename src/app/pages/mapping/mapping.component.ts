@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
-import * as XLSX from 'xlsx';
+import * as ExcelJS from 'exceljs';
 import { LoaderService } from 'src/app/service/loader/data-loader.service';
 import {
   DialogInfo,
@@ -157,12 +157,50 @@ export class MappingComponent implements OnInit, AfterViewInit {
     });
   }
 
-  exportToExcel() {
-    let element = document.getElementById('excel-table');
-    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element, { raw: true });
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'DSOMM - Activities.xlsx');
+  async exportToExcel() {
+    const element = document.getElementById('excel-table');
+    if (!element) {
+      console.error('Excel table element not found');
+      return;
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sheet1');
+
+    // Extract table data
+    const table = element as HTMLTableElement;
+    const rows = Array.from(table.querySelectorAll('tr'));
+
+    rows.forEach(row => {
+      const cells = Array.from(row.querySelectorAll('th, td'));
+      const rowData = cells.map(cell => cell.textContent?.trim() || '');
+      worksheet.addRow(rowData);
+    });
+
+    // Auto-fit columns (optional, improves readability)
+    worksheet.columns.forEach(column => {
+      let maxLength = 0;
+      column.eachCell?.({ includeEmpty: true }, cell => {
+        const cellLength = cell.value ? cell.value.toString().length : 10;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = Math.min(maxLength + 2, 50); // Max width of 50
+    });
+
+    // Write file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'DSOMM - Activities.xlsx';
+    anchor.click();
+    window.URL.revokeObjectURL(url);
+
     console.log(`${perfNow()}: Mapping: Exported to Excel`);
   }
 
