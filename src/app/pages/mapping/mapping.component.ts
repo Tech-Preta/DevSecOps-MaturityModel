@@ -180,7 +180,7 @@ export class MappingComponent implements OnInit, AfterViewInit {
     // Auto-fit columns for better readability
     worksheet.columns.forEach(column => {
       let maxLength = 0;
-      column.eachCell?.({ includeEmpty: true }, cell => {
+      column.eachCell({ includeEmpty: true }, cell => {
         const cellLength = cell.value ? cell.value.toString().length : 10;
         if (cellLength > maxLength) {
           maxLength = cellLength;

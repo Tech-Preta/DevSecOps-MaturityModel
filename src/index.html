@@ -5,6 +5,9 @@
     <title>DSOMM</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Content Security Policy for XSS mitigation (Dependabot #58)
+         Note: 'unsafe-inline' and 'unsafe-eval' are required for Angular 13.
+         These will be removed when upgrading to Angular 19+ which supports stricter CSP. -->
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; 
