@@ -14,7 +14,6 @@
   "dependencies": {
     "@angular/animations": "^13.0.0",
     "@angular/cdk": "^13.0.0",
-    "@angular/cli": "^13.3.11",
     "@angular/common": "^13.0.0",
     "@angular/compiler": "^13.0.0",
     "@angular/core": "^13.0.0",
@@ -44,12 +43,13 @@
     "@angular-eslint/eslint-plugin-template": "^13.0.0",
     "@angular-eslint/schematics": "^13.0.0",
     "@angular-eslint/template-parser": "^13.0.0",
+    "@angular/cli": "^13.3.11",
     "@angular/compiler-cli": "^13.0.0",
     "@grafana/faro-webpack-plugin": "^0.1.1",
     "@types/d3": "^7.4.0",
     "@types/jasmine": "~3.10.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/markdown-it": "^12.2.3",
+    "@types/markdown-it": "12.2.0",
     "@types/node": "^12.11.1",
     "@types/yamljs": "^0.2.31",
     "@typescript-eslint/eslint-plugin": "5.27.1",
@@ -74,7 +74,9 @@
   },
   "overrides": {
     "axios": ">=1.8.2",
-    "form-data": ">=4.0.4"
+    "form-data": ">=4.0.4",
+    "@types/d3-dispatch": "3.0.6",
+    "@types/linkify-it": "3.0.5"
   },
   "browser": {
     "fs": false,
