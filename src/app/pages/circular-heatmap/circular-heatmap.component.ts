@@ -479,6 +479,9 @@ export class CircularHeatmapComponent implements OnInit, OnDestroy {
           .append('text')
           .append('textPath')
           .attr('text-anchor', 'middle')
+          // SECURITY NOTE: xlink:href usage here is safe - it references a static internal ID
+          // not user-controlled data. This does not expose XSS vulnerability (Dependabot #58).
+          // When upgrading to Angular 19+, consider using href instead of xlink:href.
           .attr('xlink:href', '#segment-label-path-' + id)
           .style('font-size', segmentLabelFontSize + 'px')
           .attr('startOffset', function (d, i) {
