@@ -76,5 +76,8 @@
     "fs": false,
     "path": false,
     "os": false
+  },
+  "overrides": {
+    "form-data": ">=4.0.4"
   }
 }
